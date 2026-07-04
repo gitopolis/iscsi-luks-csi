@@ -22,8 +22,7 @@ use serde::{Deserialize, Serialize};
 pub struct IscsiLuksVolumeSpec {
     pub target: IscsiTargetSpec,
     pub capacity: String,
-    pub luks_secret_ref: SecretKeyRef,
-    pub chap_secret_ref: Option<ChapSecretRef>,
+    pub stage_secret_ref: StageSecretRef,
     pub storage_class_name: Option<String>,
     #[serde(default = "default_fs_type")]
     #[schemars(default = "default_fs_type")]
@@ -43,15 +42,11 @@ pub struct IscsiTargetSpec {
 
 #[derive(Deserialize, Serialize, Clone, Debug, Default, JsonSchema)]
 #[serde(rename_all = "camelCase")]
-pub struct SecretKeyRef {
+pub struct StageSecretRef {
     pub name: String,
-    pub key: String,
-}
-
-#[derive(Deserialize, Serialize, Clone, Debug, Default, JsonSchema)]
-#[serde(rename_all = "camelCase")]
-pub struct ChapSecretRef {
-    pub name: String,
+    #[serde(default = "default_luks_passphrase_key")]
+    #[schemars(default = "default_luks_passphrase_key")]
+    pub luks_passphrase_key: String,
     #[serde(default = "default_chap_username_key")]
     #[schemars(default = "default_chap_username_key")]
     pub username_key: String,
@@ -73,10 +68,29 @@ fn default_fs_type() -> String {
     "ext4".to_string()
 }
 
+fn default_luks_passphrase_key() -> String {
+    "luksPassphrase".to_string()
+}
+
 fn default_chap_username_key() -> String {
-    "username".to_string()
+    "chapUsername".to_string()
 }
 
 fn default_chap_password_key() -> String {
-    "password".to_string()
+    "chapPassword".to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn stage_secret_ref_defaults_key_names() {
+        let got: StageSecretRef = serde_yaml::from_str("name: media-iscsi\n").unwrap();
+
+        assert_eq!(got.name, "media-iscsi");
+        assert_eq!(got.luks_passphrase_key, "luksPassphrase");
+        assert_eq!(got.username_key, "chapUsername");
+        assert_eq!(got.password_key, "chapPassword");
+    }
 }

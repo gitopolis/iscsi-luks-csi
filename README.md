@@ -48,5 +48,5 @@ cargo run --bin gencrd -- --output deploy/crds
 ```
 
 The first API is `IscsiLuksVolume`, a namespaced description of one static
-iSCSI LUN, its Kubernetes Secret references, filesystem settings, and minimal
-controller status.
+iSCSI LUN, its `NodeStageVolume` Secret reference, filesystem settings, and
+minimal controller status.

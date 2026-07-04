@@ -38,31 +38,23 @@ spec:
                 type: boolean
               capacity:
                 type: string
-              chapSecretRef:
-                nullable: true
-                properties:
-                  name:
-                    type: string
-                  passwordKey:
-                    default: password
-                    type: string
-                  usernameKey:
-                    default: username
-                    type: string
-                required:
-                - name
-                type: object
               fsType:
                 default: ext4
                 type: string
-              luksSecretRef:
+              stageSecretRef:
                 properties:
-                  key:
+                  luksPassphraseKey:
+                    default: luksPassphrase
                     type: string
                   name:
                     type: string
+                  passwordKey:
+                    default: chapPassword
+                    type: string
+                  usernameKey:
+                    default: chapUsername
+                    type: string
                 required:
-                - key
                 - name
                 type: object
               storageClassName:
@@ -85,7 +77,7 @@ spec:
                 type: object
             required:
             - capacity
-            - luksSecretRef
+            - stageSecretRef
             - target
             type: object
           status:

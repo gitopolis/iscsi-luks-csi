@@ -23,6 +23,13 @@ spec:
       - name: driver
         image: ghcr.io/gitopolis/iscsi-luks-csi:latest
         imagePullPolicy: IfNotPresent
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - |
+          /usr/sbin/iscsid || true
+          exec /iscsi-luks-csi
         env:
         - name: CSI_ENDPOINT
           value: unix:///csi/csi.sock
@@ -40,8 +47,12 @@ spec:
           mountPropagation: Bidirectional
         - name: dev
           mountPath: /dev
-        - name: run
-          mountPath: /run
+        - name: initiatorname
+          mountPath: /etc/iscsi/initiatorname.iscsi
+          readOnly: true
+        - name: lib-modules
+          mountPath: /lib/modules
+          readOnly: true
         - name: sys
           mountPath: /sys
       - name: node-driver-registrar
@@ -71,9 +82,13 @@ spec:
         hostPath:
           path: /dev
           type: Directory
-      - name: run
+      - name: initiatorname
         hostPath:
-          path: /run
+          path: /etc/iscsi/initiatorname.iscsi
+          type: File
+      - name: lib-modules
+        hostPath:
+          path: /lib/modules
           type: Directory
       - name: sys
         hostPath:

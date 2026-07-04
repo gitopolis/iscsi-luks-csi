@@ -4,6 +4,12 @@ ARG VERSION
 
 WORKDIR /usr/src/app
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libprotobuf-dev \
+        protobuf-compiler \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY src src
 COPY proto proto
 COPY build.rs build.rs

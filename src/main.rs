@@ -1,7 +1,7 @@
 use clap::Parser;
 use iscsi_luks_csi::config::{Args, NodeConfig};
+use iscsi_luks_csi::csi;
 use iscsi_luks_csi::driver::DriverContext;
-use tracing::info;
 use tracing_subscriber::{EnvFilter, fmt};
 
 #[tokio::main]
@@ -13,19 +13,12 @@ async fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = NodeConfig::load(args.config).await?;
-    let driver = DriverContext::new(config).await?;
 
     if args.check {
+        let driver = DriverContext::new(config).await?;
         driver.check().await?;
         return Ok(());
     }
 
-    info!(
-        endpoint = %args.endpoint,
-        driver = %driver.config.driver_name,
-        "CSI server skeleton initialized"
-    );
-    info!("CSI gRPC service implementation is intentionally pending");
-
-    Ok(())
+    csi::serve(&args.endpoint, config).await
 }

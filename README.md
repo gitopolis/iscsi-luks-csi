@@ -38,3 +38,15 @@ node command planner for:
 
 The actual CSI gRPC service will be added after the command planner and safety
 tests are in place.
+
+## CRDs
+
+Generate the checked-in CRD schema with:
+
+```shell
+cargo run --bin gencrd -- --output deploy/crds
+```
+
+The first API is `IscsiLuksVolume`, a namespaced description of one static
+iSCSI LUN, its `NodeStageVolume` Secret reference, filesystem settings, and
+minimal controller status.

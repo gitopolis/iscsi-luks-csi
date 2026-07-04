@@ -31,7 +31,7 @@ pub struct NodeConfig {
 impl Default for NodeConfig {
     fn default() -> Self {
         Self {
-            driver_name: "dev.nikita.iscsi-luks-csi".to_string(),
+            driver_name: "dev.gitopolis.iscsi-luks-csi".to_string(),
             node_id: None,
             default_fs_type: "ext4".to_string(),
             mapper_prefix: "iscsi-luks-csi".to_string(),

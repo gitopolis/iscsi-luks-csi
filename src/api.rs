@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(CustomResource, Deserialize, Serialize, Clone, Debug, Default, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 #[kube(
-    group = "storage.nikita.dev",
+    group = "storage.gitopolis.dev",
     version = "v1alpha1",
     kind = "IscsiLuksVolume",
     plural = "iscsiluksvolumes",

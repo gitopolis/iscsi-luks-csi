@@ -437,7 +437,7 @@ mod tests {
             PathBuf::from("/var/lib/kubelet/stage")
         );
         assert_eq!(got.plan.target.portal, "192.0.2.10:3260");
-        assert_eq!(got.plan.target.iqn, "iqn.2026-07.dev.nikita:test");
+        assert_eq!(got.plan.target.iqn, "iqn.2026-07.dev.gitopolis:test");
         assert_eq!(got.plan.target.lun, 1);
         assert_eq!(got.plan.mapper_name, "iscsi-luks-csi-media");
         assert_eq!(got.plan.fs_type, "ext4");
@@ -502,7 +502,7 @@ mod tests {
             ]),
             volume_context: HashMap::from([
                 (ATTR_PORTAL.into(), "192.0.2.10:3260".into()),
-                (ATTR_IQN.into(), "iqn.2026-07.dev.nikita:test".into()),
+                (ATTR_IQN.into(), "iqn.2026-07.dev.gitopolis:test".into()),
                 (ATTR_LUN.into(), "1".into()),
             ]),
         }

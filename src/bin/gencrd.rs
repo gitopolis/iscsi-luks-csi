@@ -15,7 +15,7 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     fs::create_dir_all(&args.output)?;
     fs::write(
-        args.output.join("storage.nikita.dev_iscsiluksvolumes.yaml"),
+        args.output.join("storage.gitopolis.dev_iscsiluksvolumes.yaml"),
         serde_yaml::to_string(&IscsiLuksVolume::crd())?,
     )?;
     Ok(())

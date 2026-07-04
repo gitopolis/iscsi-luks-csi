@@ -5,6 +5,8 @@ ARG VERSION
 WORKDIR /usr/src/app
 
 COPY src src
+COPY proto proto
+COPY build.rs build.rs
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
 

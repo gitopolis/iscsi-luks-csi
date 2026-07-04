@@ -36,17 +36,6 @@ node command planner for:
 3. Filesystem detection/creation.
 4. Stage and publish mount planning.
 
-The actual CSI gRPC service will be added after the command planner and safety
-tests are in place.
-
-## CRDs
-
-Generate the checked-in CRD schema with:
-
-```shell
-cargo run --bin gencrd -- --output deploy/crds
-```
-
-The first API is `IscsiLuksVolume`, a namespaced description of one static
-iSCSI LUN, its `NodeStageVolume` Secret reference, filesystem settings, and
-minimal controller status.
+The first Kubernetes deployment path is a native static CSI `PersistentVolume`
+with `volumeAttributes` for target settings and `nodeStageSecretRef` for LUKS
+and CHAP credentials.

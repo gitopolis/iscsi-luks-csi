@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-iscsi-luks
+spec:
+  accessModes:
+  - ReadWriteOnce
+  volumeMode: Filesystem
+  storageClassName: ""
+  volumeName: data-iscsi-luks
+  resources:
+    requests:
+      storage: 1Ti

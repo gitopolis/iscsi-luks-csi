@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-iscsi-luks
+  labels:
+    app.kubernetes.io/name: iscsi-luks-csi
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+  - ReadWriteOnce
+  volumeMode: Filesystem
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  csi:
+    driver: dev.gitopolis.iscsi-luks-csi
+    volumeHandle: data-iscsi-luks
+    fsType: ext4
+    nodeStageSecretRef:
+      name: data-iscsi-luks
+      namespace: default
+    volumeAttributes:
+      portal: 192.0.2.10:3260
+      iqn: iqn.2026-07.example:data
+      lun: "1"
+      allowFormat: "false"

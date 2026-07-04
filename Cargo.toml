@@ -10,12 +10,18 @@ anyhow = "1.0.100"
 clap = { version = "4.5.53", features = ["derive", "env"] }
 k8s-openapi = { version = "0.28.0", features = ["v1_35"] }
 kube = { version = "4.0.0", default-features = true, features = ["runtime", "derive"] }
+prost = "0.14.1"
 schemars = "1.2.1"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 serde_yaml = "0.9.34"
 thiserror = "2.0.17"
 tokio = { version = "1.52.3", features = ["full"] }
+tokio-stream = { version = "0.1.17", features = ["net"] }
 tonic = "0.14.6"
+tonic-prost = "0.14.2"
 tracing = "0.1.43"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter", "fmt"] }
+
+[build-dependencies]
+tonic-prost-build = "0.14.2"

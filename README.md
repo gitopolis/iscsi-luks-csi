@@ -39,3 +39,17 @@ node command planner for:
 The first Kubernetes deployment path is a native static CSI `PersistentVolume`
 with `volumeAttributes` for target settings and `nodeStageSecretRef` for LUKS
 and CHAP credentials.
+
+## Manifests
+
+Raw manifests live under `deploy/`:
+
+```shell
+kubectl apply -k deploy/node
+kubectl apply -k deploy/examples
+```
+
+Before applying, replace the image in `deploy/node/daemonset.yaml`, replace
+secret placeholders in `deploy/examples/secret.example.yaml`, and set the real
+iSCSI portal, IQN, LUN, capacity, and `allowFormat` value in
+`deploy/examples/static-pv.yaml`.

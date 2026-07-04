@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: iscsi-luks-csi-node
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: iscsi-luks-csi
+    app.kubernetes.io/component: node
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: iscsi-luks-csi
+      app.kubernetes.io/component: node
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: iscsi-luks-csi
+        app.kubernetes.io/component: node
+    spec:
+      serviceAccountName: iscsi-luks-csi-node
+      hostNetwork: true
+      containers:
+      - name: driver
+        image: ghcr.io/gitopolis/iscsi-luks-csi:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: CSI_ENDPOINT
+          value: unix:///csi/csi.sock
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: plugin-dir
+          mountPath: /csi
+        - name: kubelet-dir
+          mountPath: /var/lib/kubelet
+          mountPropagation: Bidirectional
+        - name: dev
+          mountPath: /dev
+        - name: run
+          mountPath: /run
+        - name: sys
+          mountPath: /sys
+      - name: node-driver-registrar
+        image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.14.0
+        args:
+        - --csi-address=/csi/csi.sock
+        - --kubelet-registration-path=/var/lib/kubelet/plugins/dev.gitopolis.iscsi-luks-csi/csi.sock
+        volumeMounts:
+        - name: plugin-dir
+          mountPath: /csi
+        - name: registration-dir
+          mountPath: /registration
+      volumes:
+      - name: plugin-dir
+        hostPath:
+          path: /var/lib/kubelet/plugins/dev.gitopolis.iscsi-luks-csi
+          type: DirectoryOrCreate
+      - name: registration-dir
+        hostPath:
+          path: /var/lib/kubelet/plugins_registry
+          type: Directory
+      - name: kubelet-dir
+        hostPath:
+          path: /var/lib/kubelet
+          type: Directory
+      - name: dev
+        hostPath:
+          path: /dev
+          type: Directory
+      - name: run
+        hostPath:
+          path: /run
+          type: Directory
+      - name: sys
+        hostPath:
+          path: /sys
+          type: Directory

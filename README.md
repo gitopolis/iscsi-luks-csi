@@ -49,7 +49,6 @@ kubectl apply -k deploy/node
 kubectl apply -k deploy/examples
 ```
 
-Before applying, replace the image in `deploy/node/daemonset.yaml`, replace
-secret placeholders in `deploy/examples/secret.example.yaml`, and set the real
-iSCSI portal, IQN, LUN, capacity, and `allowFormat` value in
-`deploy/examples/static-pv.yaml`.
+Before applying examples, create the referenced Secret and set `allowFormat:
+"true"` only for first-time LUKS/ext4 initialization. Set it back to `"false"`
+after the first successful stage.

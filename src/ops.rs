@@ -374,7 +374,18 @@ pub fn stage_host_commands(
 }
 
 pub fn iscsi_login_commands(target: &IscsiTarget, use_chap: bool) -> Vec<HostCommand> {
-    let mut commands = Vec::new();
+    let mut commands = vec![HostCommand {
+        program: "iscsiadm".to_string(),
+        args: literals([
+            "--mode",
+            "discovery",
+            "--type",
+            "sendtargets",
+            "--portal",
+            target.portal.as_str(),
+        ]),
+        stdin: None,
+    }];
     if use_chap {
         commands.push(iscsi_update(
             target,
@@ -876,13 +887,24 @@ mod tests {
     fn iscsi_login_commands_include_chap_when_requested() {
         let got = iscsi_login_commands(&stage_plan(false).target, true);
 
-        assert_eq!(got.len(), 4);
+        assert_eq!(got.len(), 5);
         assert_eq!(got[0].program, "iscsiadm");
         assert_eq!(
-            got[2].args.last(),
+            got[0].args,
+            literals([
+                "--mode",
+                "discovery",
+                "--type",
+                "sendtargets",
+                "--portal",
+                "192.0.2.10:3260",
+            ])
+        );
+        assert_eq!(
+            got[3].args.last(),
             Some(&CommandArg::Secret(SecretSlot::ChapPassword))
         );
-        assert!(got[3].args.contains(&CommandArg::Literal("--login".into())));
+        assert!(got[4].args.contains(&CommandArg::Literal("--login".into())));
     }
 
     #[test]
